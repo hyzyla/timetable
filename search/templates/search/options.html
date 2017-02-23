@@ -1,0 +1,4 @@
+<option disabled selected value> -- Оберіть значення -- </option>
+{% for value in value_list %}
+    <option value={{ value.id }}> {{ value.title }} </option>
+{% endfor%}

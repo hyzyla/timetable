@@ -1,0 +1,38 @@
+{% extends 'search/base.html' %} 
+{% block 'body' %}
+{% load static %}
+
+<link href="{% static "search/css/bootstrap.css" %}" rel="stylesheet">
+<script src="{% static "search/js/bootstrap.min.js" %}"></script>
+<style>
+    .table{
+        table-layout: fixed;
+    }
+</style>
+
+<div class="container">
+
+    {% for day in days %}
+    <h4><b>{{ day.name }}</b></h4>
+    <table class="table table-striped table-bordered table-condense">
+        <tr class="info">
+            <th>Час</th>
+            <th>Заняття</th>
+            <th>Викладач</th>
+            <th>Аудиторія</th>
+    	</tr>
+        {% for lesson in result %}
+        {% if day.day == lesson.day %}
+        <tr>
+    	    <td>{{ lesson.id_time.number }}: ({{ lesson.id_time.time_begin|date:"H:i" }}-{{ lesson.id_time.time_end|date:"H:i" }})
+            </td>
+    	    <td>{{ lesson.id_lesson }}</td>
+    	    <td>{{ lesson.id_lecturer }}</td>
+    	    <td>{{ lesson.id_room }}</td>
+        </tr>
+        {% endif %}  
+        {% endfor %}
+    </table>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'search/base.html' %} 
+{% block 'body' %}
+{% load static %}
+
+<script>
+    function searchfunc() {
+        var a = document.getElementById("group");
+        var group = a.options[a.selectedIndex].value;
+        var b = document.getElementById("day");
+        var day = b.options[b.selectedIndex].value;
+        var c = document.getElementById("week");
+        var week = c.options[c.selectedIndex].value;
+        var urlStr = document.URL;
+        window.location.href = urlStr + "result/" + group + "/" + day + "/" + week + "/";
+    }
+
+    function updateSelect(selectedField){
+        var c = document.getElementById(selectedField);
+        value = c.options[c.selectedIndex].value;
+        var request = $.ajax({
+            url: "",
+            data: {
+                "value": value,
+                "selectedField": selectedField,
+            },
+            type: "GET",
+            dataType: "text",
+        });
+
+        if (selectedField == "university") {
+            request.done(function(result) {
+                $("#faculty").prop("disabled", false);
+                $("#specialization").prop("disabled", true);
+                $("#group").prop("disabled", true);
+                $("#faculty").html(result);
+            });
+        } else if (selectedField == "faculty"){
+            request.done(function(result) {
+                $("#specialization").prop("disabled", false)
+                $("#group").prop("disabled", true);
+                $("#specialization").html(result);
+            });
+        } else if (selectedField == "specialization") {
+            request.done(function(result) {
+                $("#group").prop("disabled", false)
+                $("#group").html(result);
+            });
+        }
+
+    }
+</script>
+
+
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form>
+                    <div class="form-group">    
+                        {% if university_list %}
+                        <label for=faculty id="label_univ">Університет</label>
+                        <select class="form-control" id="university" onchange="updateSelect(this.id)">
+                            <option disabled selected value> -- Оберіть значення -- </option>
+                            {% for university in university_list %}
+                                <option value={{ university.id }}> {{ university.short_title }} </option>
+                            {% endfor%}
+                        </select> 
+                        {% else %}
+                        <label for=university>Університет</label>
+                        <select class="form-control" id="university" onchange="updateSelect(this.id)" disabled></select>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group" >    
+                        <label for=faculty> Факультет </label>
+                        <select class="form-control" id="faculty" onchange="updateSelect(this.id)" disabled>
+                            <!-- AJAX -->
+                        </select> 
+                    </div>
+
+                    <div class="form-group" >    
+                        <label for=specialization> Спеціалізація </label>
+                        <select class="form-control" id="specialization" onchange="updateSelect(this.id)" disabled>
+                            <!-- AJAX -->
+                        </select> 
+                    </div>
+
+                    <div class="form-group" >    
+                        <label for=group> Група </label>
+                        <select class="form-control" id="group" disabled>
+                            <!-- AJAX -->
+                        </select> 
+                    </div>
+
+                    <div class="form-group">
+                        <label for=day>День тижня</label>
+                        <select class="form-control" id="day">
+                            {% for i, day in day_list.items   %}
+                                <option value={{ i }}> {{ day }} </option>
+                            {% endfor%}
+                        </select> 
+                    </div>
+
+                    <div class="form-group">
+                        <label for=week>Тип тижня</label>
+                        <select class="form-control" id="week">
+                            {% for i, week in week_list.items  %}
+                                <option value={{ i }}> {{ week  }} </option>
+                            {% endfor%}
+                        </select> 
+                    </div>
+
+                    <div class="form-group">
+                    <input type="button" name="search-button" value="Пошук" class="btn btn-primary" onclick="searchfunc()">
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3    "></div>
+        </div>
+    </div>
+{% endblock %}

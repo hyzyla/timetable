@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <script src="{% static "search/js/jquery-3.1.1.min.js" %}"></script>
+    <script src="{% static "search/js/bootstrap.min.js" %}"></script>
+    <link href="{% static "search/css/bootstrap.css" %}" rel="stylesheet">
+
+    <title> My amazing site </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+{% include "search/header.html"%}
+  {% block 'body' %}
+  {% endblock %}
+</body>
+</html>
